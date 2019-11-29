@@ -1,0 +1,26 @@
+开源应用容器引擎Docker 
+1.Docker启动Get Permission Denied https://www.cnblogs.com/informatics/p/8276172.html
+原因：大概的意思就是：docker进程使用Unix Socket而不是TCP端口。而默认情况下，Unix socket属于root用户，需要root权限才能访问。
+解决方法1：
+使用sudo获取管理员权限，运行docker命令
+解决方法2：
+docker守护进程启动的时候，会默认赋予名字为docker的用户组读写Unix socket的权限，因此只要创建docker用户组，并将当前用户加入到docker用户组中，那么当前用户就有权限访问Unix socket了，进而也就可以执行docker相关命令：
+sudo groupadd docker     #添加docker用户组
+sudo gpasswd -a $USER docker     #将登陆用户加入到docker用户组中
+newgrp docker     #更新用户组
+docker ps    #测试docker命令是否可以使用sudo正常使用
+-------------------------------------------------------------------------------------------------------------------------
+2.解决 Docker pull 出现的 error pulling image configuration: Get https://dseasb33srnrn.cloudfront.net/
+https://blog.csdn.net/sfdst/article/details/69336273
+
+systemctl stop docker
+echo "DOCKER_OPTS=\"\$DOCKER_OPTS --registry-mirror=http://f2d6cb40.m.daocloud.io\"" | sudo tee -a /etc/default/docker
+service docker restart
+-------------------------------------------------------------------------------------------------------------------------
+dcoker启动/关闭：
+①sudo service docker　start   sudo service docker　stop
+②sudo systemctl enable docker \ sudo systemctl start docker \ sudo systemctl stop docker
+-------------------------------------------------------------------------------------------------------------------------
+如何批量删除Docker中已停止的容器？-可以有多种方式
+https://blog.csdn.net/CSDN_duomaomao/article/details/78587103
+-------------------------------------------------------------------------------------------------------------------------
